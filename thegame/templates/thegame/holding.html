@@ -1,0 +1,12 @@
+                    <form method="post" action="{% url 'save_g_answer' question.pk answer %}" style="display: inline-block;">
+                        <input type="text" name="answer" value="question.answer">
+                        {% csrf_token %}
+                        <button class=" ui button">Submit</button>
+                    </form>
+
+
+                    <form method="post" action="{% url 'save_g_answer' question.pk answer %}" style="display: inline-block;">
+                        <input type="text" name="answer" value="" id="answer">
+                        {% csrf_token %}
+                        <button class=" ui button">Submit</button>
+                    </form>

@@ -1,0 +1,37 @@
+{% extends "thegame/base.html" %}
+{% block content %}
+
+{% if questions %}
+    <h2 class="ui header">Questions</h2>
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+            <tr>
+                <td>{{ question }}</td>
+                <td>{{ question.answer_set.get }}</td>
+                <td>
+                    <form method="post" action="{% url 'save_g_answer' question_pk=question.pk %}" style="display: inline-block;">
+                        <input type="text" name="answer" value="{{ question }}" id="answer">
+                        {% csrf_token %}
+                        <button class=" ui button">Submit</button>
+                    </form>
+
+                </td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h2 class="ui header">Your questions
+        <div class="sub header">There are no questions yet</div>
+    </h2>
+    {% endif %}
+
+{% endblock content %}
