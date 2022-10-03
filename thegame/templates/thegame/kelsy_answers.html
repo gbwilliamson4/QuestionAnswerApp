@@ -26,7 +26,7 @@
                     <form method="post" action="{% url 'save_k_answer' question_pk=question.pk %}" style="display: inline-block;">
                         <input type="text" name="answer" id="answer">
                         {% csrf_token %}
-                        <button class=" ui button">Submit</button>
+                        <button class="btn btn-outline-dark">Submit</button>
                     </form>
                     {% endif %}
                 </td>

@@ -9,11 +9,11 @@
 </head>
 <body>
 
-<div class="container p-5 my-5">
+<div class="container p-3 my-5 border">
 <form action="{% url 'new_question' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Submit">
+    <input type="submit" class="btn btn-outline-dark" value="Submit">
 </form>
 </div>
 <br><br>
