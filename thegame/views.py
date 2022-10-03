@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .forms import QuestionForm, AnswerForm
-from .models import Question, Answer, People
+from .forms import *
+from .models import *
 from django.urls import reverse
 
 # def index(request):
@@ -32,8 +32,21 @@ def new_question(request):
 
 
 def kelsy_answers(request):
-    answers = Answer.objects.all()
-    context = {'answers': answers}
+    questions = Question.objects.all()
+
+    if request.method != 'POST':
+        # No data submitted; create a blank form.
+        form = KelsyAnswerForm()
+    else:
+        # POST data submitted; process data.
+        form = KelsyAnswerForm(data=request.POST)
+        if form.is_valid():
+            print(form)
+            form.save()
+            return redirect('george_answers')
+
+    context = {'questions': questions, 'form': form}
+    # context = {'questions': questions}
     return render(request, 'thegame/kelsy_answers.html', context)
 
 
@@ -42,10 +55,10 @@ def george_answers(request):
 
     if request.method != 'POST':
         # No data submitted; create a blank form.
-        form = AnswerForm()
+        form = GeorgeAnswerForm()
     else:
         # POST data submitted; process data.
-        form = AnswerForm(data=request.POST)
+        form = GeorgeAnswerForm(data=request.POST)
         if form.is_valid():
             print(form)
             form.save()
@@ -64,12 +77,20 @@ def save_g_answer(request, question_pk):
     # print(question_pk)
     # print("request.post", request.POST)
     # print(request.POST['answer'])
-    person = People.objects.get(person='George')
     question = Question.objects.get(pk=question_pk)
 
     ans = request.POST['answer']
-    a = Answer(person=person, question=question, answer=ans)
+    a = GeorgeAnswer(question=question, answer=ans)
     a.save()
 
     return redirect('george_answers')
-    # return redirect('thegame/george_answers.html')
+
+
+def save_k_answer(request, question_pk):
+    question = Question.objects.get(pk=question_pk)
+
+    ans = request.POST['answer']
+    a = KelsyAnswer(question=question, answer=ans)
+    a.save()
+
+    return redirect('kelsy_answers')

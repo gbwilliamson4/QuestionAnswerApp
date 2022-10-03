@@ -1,15 +1,39 @@
 {% extends "thegame/base.html" %}
 {% block content %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% if questions %}
+    <h2 class="ui header">Questions</h2>
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+            <tr>
+                <td>{{ question }}</td>
+                <td>
+                    {% if question.kelsyanswer %}
+                    {{ question.kelsyanswer }}
+                    {% else %}
+                    <form method="post" action="{% url 'save_k_answer' question_pk=question.pk %}" style="display: inline-block;">
+                        <input type="text" name="answer" id="answer">
+                        {% csrf_token %}
+                        <button class=" ui button">Submit</button>
+                    </form>
+                    {% endif %}
+                </td>
 
-</body>
-</html>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h2 class="ui header">Your questions
+        <div class="sub header">There are no questions yet</div>
+    </h2>
+    {% endif %}
 
 {% endblock content %}

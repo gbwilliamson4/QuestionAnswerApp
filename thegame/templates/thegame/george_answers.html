@@ -14,14 +14,16 @@
             {% for question in questions %}
             <tr>
                 <td>{{ question }}</td>
-                <td>{{ question.answer_set.get }}</td>
                 <td>
+                    {% if question.georgeanswer %}
+                    {{ question.georgeanswer }}
+                    {% else %}
                     <form method="post" action="{% url 'save_g_answer' question_pk=question.pk %}" style="display: inline-block;">
-                        <input type="text" name="answer" value="{{ question }}" id="answer">
+                        <input type="text" name="answer" id="answer">
                         {% csrf_token %}
                         <button class=" ui button">Submit</button>
                     </form>
-
+                    {% endif %}
                 </td>
 
             </tr>

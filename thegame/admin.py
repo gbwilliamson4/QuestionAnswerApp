@@ -5,4 +5,5 @@ from .models import *
 # admin.site.register(Question)
 admin.site.register(Question)
 admin.site.register(People)
-admin.site.register(Answer)
+admin.site.register(GeorgeAnswer)
+admin.site.register(KelsyAnswer)
