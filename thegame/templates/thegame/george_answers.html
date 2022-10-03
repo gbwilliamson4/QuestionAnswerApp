@@ -2,7 +2,10 @@
 {% block content %}
 
 {% if questions %}
-    <h2 class="ui header">Questions</h2>
+<div class="container-sm">
+    <h2 class="ui header">George's Answers</h2>
+</div>
+<div class="container p-5 my-5">
     <table class="ui celled table">
         <thead>
             <tr>
@@ -30,6 +33,7 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
     {% else %}
     <h2 class="ui header">Your questions
         <div class="sub header">There are no questions yet</div>

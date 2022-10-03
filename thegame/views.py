@@ -70,7 +70,8 @@ def george_answers(request):
 
 
 def comparing(request):
-    context = {}
+    questions = Question.objects.all()
+    context = {'questions': questions}
     return render(request, 'thegame/comparing.html', context)
 
 def save_g_answer(request, question_pk):
