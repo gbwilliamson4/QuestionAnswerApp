@@ -18,10 +18,10 @@
             <tr>
                 <td>{{ question }}</td>
                 <td>
-                    {% if question.georgeanswer %}
-                    {{ question.georgeanswer }}
+                    {% if question.answer_set.get %}
+                    {{ question.answer_set.first }}
                     {% else %}
-                    <form method="post" action="{% url 'save_g_answer' question_pk=question.pk %}" style="display: inline-block;">
+                    <form method="post" action="{% url 'save_answer' question_pk=question.pk person='George' %}" style="display: inline-block;">
                         <input type="text" name="answer" id="answer">
                         {% csrf_token %}
                         <button class="btn btn-outline-dark">Submit</button>

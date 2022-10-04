@@ -1,9 +1,10 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .forms import *
 from .models import *
 from django.urls import reverse
+from django.contrib.auth import authenticate, login
+
 
 # def index(request):
 #     return HttpResponse("Welcome to the index page.")
@@ -34,18 +35,18 @@ def new_question(request):
 def kelsy_answers(request):
     questions = Question.objects.all()
 
-    if request.method != 'POST':
-        # No data submitted; create a blank form.
-        form = KelsyAnswerForm()
-    else:
-        # POST data submitted; process data.
-        form = KelsyAnswerForm(data=request.POST)
-        if form.is_valid():
-            print(form)
-            form.save()
-            return redirect('george_answers')
+    # if request.method != 'POST':
+    #     # No data submitted; create a blank form.
+    #     form = AnswerForm()
+    # else:
+    #     # POST data submitted; process data.
+    #     form = AnswerForm(data=request.POST)
+    #     if form.is_valid():
+    #         print(form)
+    #         form.save()
+    #         return redirect('george_answers')
 
-    context = {'questions': questions, 'form': form}
+    context = {'questions': questions}
     # context = {'questions': questions}
     return render(request, 'thegame/kelsy_answers.html', context)
 
@@ -53,18 +54,12 @@ def kelsy_answers(request):
 def george_answers(request):
     questions = Question.objects.all()
 
-    if request.method != 'POST':
-        # No data submitted; create a blank form.
-        form = GeorgeAnswerForm()
-    else:
-        # POST data submitted; process data.
-        form = GeorgeAnswerForm(data=request.POST)
-        if form.is_valid():
-            print(form)
-            form.save()
-            return redirect('george_answers')
+    for question in questions:
+        ans = question.answer_set.first()
+        if ans is not None:
+            print(ans)
 
-    context = {'questions': questions, 'form': form}
+    context = {'questions': questions}
     # context = {'questions': questions}
     return render(request, 'thegame/george_answers.html', context)
 
@@ -74,24 +69,54 @@ def comparing(request):
     context = {'questions': questions}
     return render(request, 'thegame/comparing.html', context)
 
-def save_g_answer(request, question_pk):
+def save_answer(request, question_pk, person):
     # print(question_pk)
-    # print("request.post", request.POST)
-    # print(request.POST['answer'])
+    print("request.post", request.POST)
+    # print(request.POST['person'])
+    print(person)
     question = Question.objects.get(pk=question_pk)
+    person = People.objects.get(person=person)
 
     ans = request.POST['answer']
-    a = GeorgeAnswer(question=question, answer=ans)
+    a = Answer(question=question, answer=ans, person=person)
     a.save()
 
     return redirect('george_answers')
 
 
-def save_k_answer(request, question_pk):
-    question = Question.objects.get(pk=question_pk)
+# def save_k_answer(request, question_pk):
+#     question = Question.objects.get(pk=question_pk)
+#
+#     ans = request.POST['answer']
+#     a = KelsyAnswer(question=question, answer=ans)
+#     a.save()
+#
+#     return redirect('kelsy_answers')
 
-    ans = request.POST['answer']
-    a = KelsyAnswer(question=question, answer=ans)
-    a.save()
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
 
-    return redirect('kelsy_answers')
+        if form.is_valid():
+            user = form.save()
+
+            login(request, user)
+
+            return redirect('index')
+    else:
+        form = SignUpForm()
+
+    return render(request, 'thegame/signup.html', {'form': form})
+
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirect to a success page.
+            redirect('index')
+    else:
+        return render(request, 'thegame/login.html', {})

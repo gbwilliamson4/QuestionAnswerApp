@@ -1,0 +1,22 @@
+{% extends "thegame/base.html" %}
+{% block content %}
+
+<div class="container p-5 my-5 text-center border">
+    <form method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <button class="btn btn-outline-dark">Login</button>
+    </form>
+</div>
+
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="mb-5 p-4 rounded-xl bg-red-300 text-white">
+                    <p>{{ error|escape }}</p>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+
+{% endblock content %}

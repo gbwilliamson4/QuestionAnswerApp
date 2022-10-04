@@ -1,3 +1,6 @@
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
 from django import forms
 from .models import *
 
@@ -7,21 +10,14 @@ class QuestionForm(forms.ModelForm):
         fields = ('question',)
         labels = {'question': 'Question'}
 
-# class AnswerForm(forms.ModelForm):
-#     class Meta:
-#         model = Answer
-#         fields = ('answer',)
-#         labels = {'answer': ':'}
-
-class GeorgeAnswerForm(forms.ModelForm):
+class AnswerForm(forms.ModelForm):
     class Meta:
-        model = GeorgeAnswer
+        model = Answer
         fields = ('answer',)
         labels = {'answer': ':'}
 
-class KelsyAnswerForm(forms.ModelForm):
+class SignUpForm(UserCreationForm):
     class Meta:
-        model = KelsyAnswer
-        fields = ('answer',)
-        labels = {'answer': ':'}
+        model = User
+        fields = ['username', 'password1', 'password2']
 
