@@ -12,13 +12,14 @@
 <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 <body>
-{% if questions %}
+{% if answers %}
 
-    {% for question in questions %}
+    {% for answer in answers %}
         <div class="container p-5 my-5 border text-center">
-            <h3>{{ question }}</h3>
-            <p>Kelsy's answer: {{ question.kelsyanswer }}</p>
-            <P>George's answer: {{ question.georgeanswer }}</P>
+            <h3>{{ answer.question }}</h3>
+
+            <p>{{ answer.user }}: {{ answer }}</p>
+
         </div>
     {% endfor %}
 {% else %}

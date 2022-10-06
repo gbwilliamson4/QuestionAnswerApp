@@ -36,51 +36,45 @@ def save_question(request):
     return redirect('new-question')
 
 
-# def kelsy_answers(request):
-#     questions = Question.objects.all()
-
-    # if request.method != 'POST':
-    #     # No data submitted; create a blank form.
-    #     form = AnswerForm()
-    # else:
-    #     # POST data submitted; process data.
-    #     form = AnswerForm(data=request.POST)
-    #     if form.is_valid():
-    #         print(form)
-    #         form.save()
-    #         return redirect('george_answers')
-
-    # context = {'questions': questions}
-    # # context = {'questions': questions}
-    # return render(request, 'thegame/kelsy_answers.html', context)
-
-
-def george_answers(request):
-    questions = Question.objects.all()
-
-    for question in questions:
-        ans = question.answer_set.first()
-        if ans is not None:
-            print(ans)
-
-    context = {'questions': questions}
-    # context = {'questions': questions}
-    return render(request, 'thegame/george_answers.html', context)
-
-
-def new_answers(request):
+@login_required
+def answers(request):
     # Get room num and questions in that room.
     room_num = request.user.room_set.first()
     room_num_id = room_num.pk
     questions = Question.objects.filter(room=room_num_id)
+    # answers = Answer.objects.filter(question__in=Question.objects.filter(room=room_num))
 
     context = {'questions': questions}
     return render(request, 'thegame/answers.html', context)
 
 
+@login_required
 def comparing(request):
-    questions = Question.objects.all()
-    context = {'questions': questions}
+    # get current users room number and filter questions accordingly
+    room_num = request.user.room_set.first()
+    # room_num_id = room_num.pk
+    print(room_num)
+    users = User.objects.filter(room=room_num)
+    print(users)
+    # the stuff above works. Returns correct value.
+
+    # get all users in the room.
+    # for peep in peeps:
+    #
+    #     print(peep, peep.answer_set.all())
+    #     # print('line 2', peep.answer__question.all())
+    #     print('line 3', peep.answer.question())
+
+    answers = Answer.objects.filter(question__in=Question.objects.filter(room=room_num))
+    for answer in answers:
+        print('answer', answer)
+        print('answer.question', answer.question)
+        print('answer.user', answer.user)
+        # print(question)
+
+    # questions = Question.objects.filter(room=room_num)
+    # print(questions)
+    context = {'answers': answers, 'users': users}
     return render(request, 'thegame/comparing.html', context)
 
 
