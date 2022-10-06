@@ -163,9 +163,10 @@ def rooms(request):
 
 @login_required
 def new_room(request):
-    # username = request.GET['username']
     room_num = randint(100, 999)
-    room = Room(room_number=room_num, user=request.user)
+    room = Room(room_number=room_num)
+    room.save()
+    room.user.add(request.user)
     room.save()
     return redirect('rooms')
 
