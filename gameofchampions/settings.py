@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-o&cu#ch341o9ia0xti%(#bfwoy!0^hp0t^=i*rxbb#7(=cm515
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -96,6 +96,7 @@ else:
         }
     }
 
+CSRF_TRUSTED_ORIGINS = ['https://question-app.up.railway.app']
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
