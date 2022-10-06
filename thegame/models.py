@@ -18,11 +18,11 @@ class Question(models.Model):
         return self.question
 
 
-# class People(models.Model):
-#     person = models.CharField(max_length=15)
-#
-#     def __str__(self):
-#         return self.person
+class People(models.Model):
+    person = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.person
 
 
 class Answer(models.Model):

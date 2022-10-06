@@ -41,3 +41,10 @@
                             {% csrf_token %}
                         </form>
                     </div>
+
+                    This came from new-question.
+                    <form action="{% url 'new-question' %}" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" class="btn btn-outline-dark" value="Submit">
+                    </form>

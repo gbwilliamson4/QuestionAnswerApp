@@ -5,7 +5,7 @@ from .models import *
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from random import randint # Used for generating random 3 digit room numbers.
+from random import randint  # Used for generating random 3 digit room numbers.
 
 
 # def index(request):
@@ -15,48 +15,29 @@ def index(request):
     context = {}
     return render(request, 'thegame/index.html', context)
 
-# This one is the original.
-# def new_question(request):
-#     """Add a new question."""
-#     questions = Question.objects.all()
-#     # questions = Question.objects.filter(room=request.user.room)
-#     if request.method != 'POST':
-#         # No data submitted; create a blank form.
-#         form = QuestionForm()
-#     else:
-#         # POST data submitted; process data.
-#         form = QuestionForm(data=request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('new_question')
-#
-#     # Display a blank or invalid form.
-#     context = {'form': form, 'questions': questions}
-#     return render(request, 'thegame/new-question.html', context)
 
+@login_required
 def new_question(request):
     """Add a new question."""
     # Get room num and questions in that room.
     room_num = request.user.room_set.first()
     room_num_id = room_num.pk
     questions = Question.objects.filter(room=room_num_id)
-
-    if request.method != 'POST':
-        # No data submitted; create a blank form.
-        form = QuestionForm()
-    else:
-        # POST data submitted; process data.
-        form = QuestionForm(data=request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('new-question')
-
-    # Display a blank or invalid form.
-    context = {'form': form, 'questions': questions}
+    context = {'questions': questions}
     return render(request, 'thegame/new-question.html', context)
 
-def kelsy_answers(request):
-    questions = Question.objects.all()
+
+@login_required
+def save_question(request):
+    room_num = request.user.room_set.first()
+    question_txt = request.POST['question']
+    question = Question(room=room_num, question=question_txt)
+    question.save()
+    return redirect('new-question')
+
+
+# def kelsy_answers(request):
+#     questions = Question.objects.all()
 
     # if request.method != 'POST':
     #     # No data submitted; create a blank form.
@@ -69,9 +50,9 @@ def kelsy_answers(request):
     #         form.save()
     #         return redirect('george_answers')
 
-    context = {'questions': questions}
     # context = {'questions': questions}
-    return render(request, 'thegame/kelsy_answers.html', context)
+    # # context = {'questions': questions}
+    # return render(request, 'thegame/kelsy_answers.html', context)
 
 
 def george_answers(request):
@@ -103,16 +84,15 @@ def comparing(request):
     return render(request, 'thegame/comparing.html', context)
 
 
-def save_answer(request, question_pk, person):
-    # print(question_pk)
+@login_required
+def save_answer(request, question_pk):
     print("request.post", request.POST)
-    # print(request.POST['person'])
-    print(person)
     question = Question.objects.get(pk=question_pk)
-    person = People.objects.get(person=person)
+    person = request.user
+    print(person)
 
     ans = request.POST['answer']
-    a = Answer(question=question, answer=ans, person=person)
+    a = Answer(question=question, answer=ans, user=person)
     a.save()
 
     return redirect('answers')
@@ -155,11 +135,13 @@ def login_user(request):
     else:
         return render(request, 'thegame/login.html', {})
 
+
 @login_required
 def rooms(request):
     rooms = Room.objects.filter(user=request.user)
     context = {'rooms': rooms}
     return render(request, 'thegame/rooms.html', context)
+
 
 @login_required
 def new_room(request):
@@ -180,10 +162,11 @@ def leave_room(request):
     room.save()
     return redirect('rooms')
 
+
 @login_required
 def join_room(request):
     num = request.POST['room-num']
-    num = int(num) # make sure that its an integer.
+    num = int(num)  # make sure that its an integer.
     print(request.user)
     user = request.user
     room = Room.objects.filter(room_number=num)
