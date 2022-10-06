@@ -10,3 +10,34 @@
                         {% csrf_token %}
                         <button class=" ui button">Submit</button>
                     </form>
+
+
+                    <div class="container p-5 my-5 text-center border">
+                        <form method="post">
+                        {{ form.as_p }}
+                        {% csrf_token %}
+                        <button class="btn btn-outline-dark">Login</button>
+                        </form>
+                    </div>
+
+
+
+                    **** Use this for signup page ****
+                    <div class="container p-5 my-5 text-center border">
+                        <form method="post">
+                          <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username">
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password1">
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password2">
+                          </div>
+                          <button type="submit" class="btn btn-outline-dark">Submit</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>

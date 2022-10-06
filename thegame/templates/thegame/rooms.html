@@ -1,0 +1,33 @@
+{% extends "thegame/base.html" %}
+{% block content %}
+
+<div class="container p-5 my-5 text-center border">
+    {% if rooms %}
+    {% for room in rooms %}
+        <p>There is a room. Hooray!</p>
+        <p>{{ room.room_number }}</p>
+    {% endfor %}
+
+    <form method="post" action="{% url 'leave-room' %}">
+        {% csrf_token %}
+        <button class="btn btn-outline-dark">Leave Room</button>
+    </form>
+
+    {% else %}
+        <p>No current room.</p>
+        <form method="post" action="{% url 'new-room' %}">
+            {% csrf_token %}
+            <button class="btn btn-outline-dark">Create Room</button>
+            <p><strong>--- or ---</strong></p>
+        </form>
+        <form method="post" action="{% url 'join-room' %}" style="display: inline-block;">
+            <input type="text" class="form-control text-center" name="room-num" placeholder="Input room number">
+            <br/>
+            {% csrf_token %}
+            <button class="btn btn-outline-dark">Join Existing Room</button>
+        </form>
+
+    {% endif %}
+</div>
+
+{% endblock content %}

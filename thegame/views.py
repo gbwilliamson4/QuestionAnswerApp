@@ -4,6 +4,8 @@ from .forms import *
 from .models import *
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from random import randint # Used for generating random 3 digit room numbers.
 
 
 # def index(request):
@@ -69,6 +71,7 @@ def comparing(request):
     context = {'questions': questions}
     return render(request, 'thegame/comparing.html', context)
 
+
 def save_answer(request, question_pk, person):
     # print(question_pk)
     print("request.post", request.POST)
@@ -117,6 +120,43 @@ def login_user(request):
         if user is not None:
             login(request, user)
             # Redirect to a success page.
-            redirect('index')
+            return redirect('index')
     else:
         return render(request, 'thegame/login.html', {})
+
+@login_required
+def rooms(request):
+    rooms = Room.objects.filter(user=request.user)
+    context = {'rooms': rooms}
+    return render(request, 'thegame/rooms.html', context)
+
+@login_required
+def new_room(request):
+    # username = request.GET['username']
+    room_num = randint(100, 999)
+    room = Room(room_number=room_num, user=request.user)
+    room.save()
+    return redirect('rooms')
+
+
+@login_required
+def leave_room(request):
+    print('attempting to leave room')
+    room = Room.objects.filter(user=request.user)
+    room = room[0]
+    room.user.remove(request.user)
+    room.save()
+    return redirect('rooms')
+
+@login_required
+def join_room(request):
+    num = request.POST['room-num']
+    num = int(num) # make sure that its an integer.
+    print(request.user)
+    user = request.user
+    room = Room.objects.filter(room_number=num)
+    room = room[0]
+    room.user.add(user)
+    room.save()
+
+    return redirect('rooms')

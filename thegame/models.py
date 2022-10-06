@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Question(models.Model):
@@ -26,6 +27,13 @@ class Answer(models.Model):
     def __str__(self):
         return self.answer
 
+
+class Room(models.Model):
+    room_number = models.IntegerField(max_length=5)
+    user = models.ManyToManyField(User, default=None, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.room_number)
 # class GeorgeAnswer(models.Model):
 #     question = models.OneToOneField(Question, on_delete=models.CASCADE)
 #     answer = models.CharField(max_length=255)
