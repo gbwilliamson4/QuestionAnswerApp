@@ -15,10 +15,32 @@ def index(request):
     context = {}
     return render(request, 'thegame/index.html', context)
 
+# This one is the original.
+# def new_question(request):
+#     """Add a new question."""
+#     questions = Question.objects.all()
+#     # questions = Question.objects.filter(room=request.user.room)
+#     if request.method != 'POST':
+#         # No data submitted; create a blank form.
+#         form = QuestionForm()
+#     else:
+#         # POST data submitted; process data.
+#         form = QuestionForm(data=request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('new_question')
+#
+#     # Display a blank or invalid form.
+#     context = {'form': form, 'questions': questions}
+#     return render(request, 'thegame/new-question.html', context)
 
 def new_question(request):
-    """Add a new topic."""
-    questions = Question.objects.all()
+    """Add a new question."""
+    # Get room num and questions in that room.
+    room_num = request.user.room_set.first()
+    room_num_id = room_num.pk
+    questions = Question.objects.filter(room=room_num_id)
+
     if request.method != 'POST':
         # No data submitted; create a blank form.
         form = QuestionForm()
@@ -27,12 +49,11 @@ def new_question(request):
         form = QuestionForm(data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect('new_question')
+            return redirect('new-question')
 
     # Display a blank or invalid form.
     context = {'form': form, 'questions': questions}
-    return render(request, 'thegame/new_question.html', context)
-
+    return render(request, 'thegame/new-question.html', context)
 
 def kelsy_answers(request):
     questions = Question.objects.all()
@@ -66,6 +87,16 @@ def george_answers(request):
     return render(request, 'thegame/george_answers.html', context)
 
 
+def new_answers(request):
+    # Get room num and questions in that room.
+    room_num = request.user.room_set.first()
+    room_num_id = room_num.pk
+    questions = Question.objects.filter(room=room_num_id)
+
+    context = {'questions': questions}
+    return render(request, 'thegame/answers.html', context)
+
+
 def comparing(request):
     questions = Question.objects.all()
     context = {'questions': questions}
@@ -84,7 +115,7 @@ def save_answer(request, question_pk, person):
     a = Answer(question=question, answer=ans, person=person)
     a.save()
 
-    return redirect('george_answers')
+    return redirect('answers')
 
 
 # def save_k_answer(request, question_pk):

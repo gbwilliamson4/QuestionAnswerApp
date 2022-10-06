@@ -10,7 +10,7 @@
 <body>
 
 <div class="container p-3 my-5 border">
-<form action="{% url 'new_question' %}" method="post">
+<form action="{% url 'new-question' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" class="btn btn-outline-dark" value="Submit">
@@ -18,9 +18,14 @@
 </div>
 <br><br>
 <div class="container">
-    {% for question in questions %}
-            <p>{{ question }}</p>
-    {% endfor %}
+    {% if questions %}
+        {% for question in questions %}
+                <p>{{ question }}</p>
+        {% endfor %}
+    {% else %}
+        <p>No questions in this room.</p>
+    {% endif %}
+
 </div>
 
 </body>
