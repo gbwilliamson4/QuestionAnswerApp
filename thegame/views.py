@@ -168,10 +168,11 @@ def delete_unused_rooms():
     print('unused rooms:', unused_rooms)
 
 
-
+import os
 @login_required
 def testing(request):
-    delete_unused_rooms()
+    # delete_unused_rooms()
+    print('os.getcwd():', os.getcwd())
     room_num = request.user.room_set.first()
     questions = Question.objects.filter(room=room_num)
 
