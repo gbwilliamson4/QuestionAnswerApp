@@ -164,7 +164,7 @@ def log_room_history(room, user):
 
 def delete_unused_rooms():
     # remove rooms that are either empty or have no questions associated with them.
-    unused_rooms = Question.room.filter(pk>1)
+    unused_rooms = Room.objects.all()
     print('unused rooms:', unused_rooms)
 
 
@@ -172,7 +172,8 @@ import os
 @login_required
 def testing(request):
     # delete_unused_rooms()
-    print('os.getcwd():', os.getcwd())
+    # print('os.getcwd():', os.getcwd())
+    cwd = os.getcwd()
     room_num = request.user.room_set.first()
     questions = Question.objects.filter(room=room_num)
 
@@ -183,5 +184,5 @@ def testing(request):
         answer = Answer.objects.filter(question__in=Question.objects.filter(pk=question.pk))
         info[question] = answer
 
-    context = {'info': info}
+    context = {'info': info, 'cwd': cwd}
     return render(request, 'thegame/tests.html', context)
