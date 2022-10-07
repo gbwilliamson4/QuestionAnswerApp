@@ -42,7 +42,21 @@ def answers(request):
     room_num = request.user.room_set.first()
     room_num_id = room_num.pk
     questions = Question.objects.filter(room=room_num_id)
-    # answers = Answer.objects.filter(question__in=Question.objects.filter(room=room_num))
+
+    #********* testing *********
+    # answers = Answer.objects.filter(question__in=Question.objects.filter(room=room_num)).filter(user=request.user)
+    # for answer in answers:
+    #     print('answer', answer)
+    #     print('answer.question', answer.question)
+    #     print('answer.user', answer.user)
+    #
+    # context = {'answers': answers}
+
+    for question in questions:
+        # print(question.answer_set.filter(user=request.user))
+        print(question)
+
+    # ********* /testing *********
 
     context = {'questions': questions}
     return render(request, 'thegame/answers.html', context)
@@ -50,32 +64,19 @@ def answers(request):
 
 @login_required
 def comparing(request):
-    # get current users room number and filter questions accordingly
     room_num = request.user.room_set.first()
-    # room_num_id = room_num.pk
-    print(room_num)
-    users = User.objects.filter(room=room_num)
-    print(users)
-    # the stuff above works. Returns correct value.
+    questions = Question.objects.filter(room=room_num)
 
-    # get all users in the room.
-    # for peep in peeps:
-    #
-    #     print(peep, peep.answer_set.all())
-    #     # print('line 2', peep.answer__question.all())
-    #     print('line 3', peep.answer.question())
+    # Lets loop through the questions, get the answers, pile them into a new list or something
+    info = {}
+    for question in questions:
+        # print('question pk', question.pk)
+        answer = Answer.objects.filter(question__in=Question.objects.filter(pk=question.pk))
+        info[question] = answer
 
-    answers = Answer.objects.filter(question__in=Question.objects.filter(room=room_num))
-    for answer in answers:
-        print('answer', answer)
-        print('answer.question', answer.question)
-        print('answer.user', answer.user)
-        # print(question)
-
-    # questions = Question.objects.filter(room=room_num)
-    # print(questions)
-    context = {'answers': answers, 'users': users}
+    context = {'info': info}
     return render(request, 'thegame/comparing.html', context)
+    # return render(request, 'thegame/comparing.html', context)
 
 
 @login_required
@@ -169,3 +170,22 @@ def join_room(request):
     room.save()
 
     return redirect('rooms')
+
+
+@login_required
+def testing(request):
+
+    room_num = request.user.room_set.first()
+    questions = Question.objects.filter(room=room_num)
+
+    # Lets loop through the questions, get the answers, pile them into a new list or something
+    info = {}
+    for question in questions:
+        # print('question pk', question.pk)
+        answer = Answer.objects.filter(question__in=Question.objects.filter(pk=question.pk))
+        info[question] = answer
+
+    context = {'info': info}
+    return render(request, 'thegame/tests.html', context)
+
+

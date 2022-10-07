@@ -24,4 +24,7 @@ urlpatterns = [
     path('new-room/', views.new_room, name='new-room'),
     path('leave-room/', views.leave_room, name='leave-room'),
     path('join-room/', views.join_room, name='join-room'),
+
+    # Test page
+    path('tests/', views.testing, name='testing'),
 ]

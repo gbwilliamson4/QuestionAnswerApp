@@ -18,8 +18,8 @@
             <tr>
                 <td>{{ question }}</td>
                 <td>
-                    {% if question.answer_set.get %}
-                    {{ question.answer_set.first }}
+                    {% if question.answer %}
+                    {{ question.answer }}
                     {% else %}
                     <form method="post" action="{% url 'save-answer' question_pk=question.pk %}" style="display: inline-block;">
                         <input type="text" name="answer" id="answer">
