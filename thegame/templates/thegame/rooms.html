@@ -30,4 +30,26 @@
     {% endif %}
 </div>
 
+<div class="container p-5 my-5 text-center border">
+    {% if room_hist %}
+    <h3>Previous history:</h3>
+        <table class="table table-striped" cellpadding="1500">
+            <thead>
+                <tr>
+                    <th scope="col">Room Number</th>
+                </tr>
+            </thead>
+            <tbody class="table">
+            {% for item in room_hist %}
+            <tr>
+                <td> {{item.room}} </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No room history to show.</p>
+    {% endif %}
+</div>
+
 {% endblock content %}

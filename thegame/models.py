@@ -31,22 +31,19 @@ class Answer(models.Model):
     answer = models.CharField(max_length=255)
 
     class Meta:
-        models.UniqueConstraint(fields=['user', 'answer'], name='oneanswerperperson')
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'answer', 'question'], name='one answer per user per question')
+        ]
 
     def __str__(self):
         return self.answer
 
-# class GeorgeAnswer(models.Model):
-#     question = models.OneToOneField(Question, on_delete=models.CASCADE)
-#     answer = models.CharField(max_length=255)
-#
-#     def __str__(self):
-#         return self.answer
-#
-#
-# class KelsyAnswer(models.Model):
-#     question = models.OneToOneField(Question, on_delete=models.CASCADE)
-#     answer = models.CharField(max_length=255)
-#
-#     def __str__(self):
-#         return self.answer
+
+class Room_History(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'room'], name='one log or something')
+        ]

@@ -5,6 +5,7 @@
       <li class="nav-item">
         <a class="nav-link active" href="{% url 'index' %}">Index</a>
       </li>
+      {% if request.user.is_authenticated %}
       <li class="nav-item">
         <a class="nav-link" href="{% url 'rooms' %}">Rooms</a>
       </li>
@@ -19,7 +20,6 @@
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
-      {% if request.user.is_authenticated %}
       <li class="nav-item">
         <a class="nav-link">{{ request.user }}</a>
       </li>
