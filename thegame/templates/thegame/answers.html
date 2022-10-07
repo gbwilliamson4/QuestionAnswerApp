@@ -3,7 +3,7 @@
 
 {% if questions %}
 <div class="container-sm">
-    <h2 class="ui header">George's Answers</h2>
+    <h2 class="ui header">{{ request.user }}'s Answers</h2>
 </div>
 <div class="container p-5 my-5">
     <table class="ui celled table">
@@ -14,14 +14,16 @@
             </tr>
         </thead>
         <tbody>
-            {% for question in questions %}
+            {% for key, values in info.items %}
             <tr>
-                <td>{{ question }}</td>
+                <td>{{ key }}</td>
                 <td>
-                    {% if question.answer %}
-                    {{ question.answer }}
+                    {% if values %}
+                    {% for v in values %}
+                        <p>{{ v.user }}: {{ v }}</p>
+                    {% endfor %}
                     {% else %}
-                    <form method="post" action="{% url 'save-answer' question_pk=question.pk %}" style="display: inline-block;">
+                    <form method="post" action="{% url 'save-answer' question_pk=key.pk %}" style="display: inline-block;">
                         <input type="text" name="answer" id="answer">
                         {% csrf_token %}
                         <button class="btn btn-outline-dark btn-sm">Submit</button>
@@ -35,9 +37,9 @@
     </table>
 </div>
     {% else %}
-    <h2 class="ui header">Your questions
-        <div class="sub header">There are no questions yet</div>
-    </h2>
+        <div class="container">
+            <h2 class="ui sub-header">There are no questions yet</h2>
+        </div>
     {% endif %}
 
 {% endblock content %}

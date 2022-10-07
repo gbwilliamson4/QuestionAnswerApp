@@ -39,26 +39,32 @@ def save_question(request):
 @login_required
 def answers(request):
     # Get room num and questions in that room.
-    room_num = request.user.room_set.first()
-    room_num_id = room_num.pk
-    questions = Question.objects.filter(room=room_num_id)
+    # room_num = request.user.room_set.first()
+    # room_num_id = room_num.pk
+    # questions = Question.objects.filter(room=room_num_id)
 
     #********* testing *********
-    # answers = Answer.objects.filter(question__in=Question.objects.filter(room=room_num)).filter(user=request.user)
-    # for answer in answers:
-    #     print('answer', answer)
-    #     print('answer.question', answer.question)
-    #     print('answer.user', answer.user)
-    #
-    # context = {'answers': answers}
+    room_num = request.user.room_set.first()
+    questions = Question.objects.filter(room=room_num)
 
+    # Lets loop through the questions, get the answers, pile them into a new list or something
+    info = {}
     for question in questions:
-        # print(question.answer_set.filter(user=request.user))
-        print(question)
+        # print('question pk', question.pk)
+        answer = Answer.objects.filter(user=request.user).filter(question__in=Question.objects.filter(pk=question.pk))
+        info[question] = answer
+         # Can I still pass through questionpk?
+        print(question.pk)
 
+    # context = {'info': info}
+
+    # for answer in answer:
+    #     print('answer:', answer)
+    #     print('question:', answer.question)
+    #     print('user:', answer.user)
     # ********* /testing *********
 
-    context = {'questions': questions}
+    context = {'answers': answers, 'questions': questions, 'info': info}
     return render(request, 'thegame/answers.html', context)
 
 
@@ -92,15 +98,6 @@ def save_answer(request, question_pk):
 
     return redirect('answers')
 
-
-# def save_k_answer(request, question_pk):
-#     question = Question.objects.get(pk=question_pk)
-#
-#     ans = request.POST['answer']
-#     a = KelsyAnswer(question=question, answer=ans)
-#     a.save()
-#
-#     return redirect('kelsy_answers')
 
 def signup(request):
     if request.method == 'POST':
@@ -187,5 +184,4 @@ def testing(request):
 
     context = {'info': info}
     return render(request, 'thegame/tests.html', context)
-
 
