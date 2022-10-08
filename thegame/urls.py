@@ -25,4 +25,7 @@ urlpatterns = [
 
     # Test page
     path('tests/', views.testing, name='testing'),
+
+    # Admin page for deleting unused rooms
+    path('delete-unused-rooms/', views.delete_unused_rooms, name='delete-unused-rooms'),
 ]

@@ -198,21 +198,23 @@ def log_room_history(room, user):
         pass
 
 
-def delete_unused_rooms():
+@login_required
+def delete_unused_rooms(request):
     # remove rooms that are either empty or have no questions associated with them.
-    unused_rooms = Room.objects.all()
-    print('unused rooms:', unused_rooms)
+    rooms_no_activity = Room.objects.exclude(question__in=Question.objects.all()).exclude(user__in=User.objects.all())
 
+    for room in rooms_no_activity:
+        room.delete()
+
+    return redirect('index')
 
 # ***** Testing below this line *****
-import os
 
 
 @login_required
 def testing(request):
-    # delete_unused_rooms()
-    # print('os.getcwd():', os.getcwd())
-    cwd = os.getcwd()
+    get_unused_rooms(request)
+
     room_num = request.user.room_set.first()
     questions = Question.objects.filter(room=room_num)
 
@@ -223,7 +225,28 @@ def testing(request):
         answer = Answer.objects.filter(question__in=Question.objects.filter(pk=question.pk))
         info[question] = answer
 
-    context = {'info': info, 'cwd': cwd}
+    context = {'info': info}
     return render(request, 'thegame/tests.html', context)
 
     # Users shouldnt be able to be in more than one room at a time... but can they?
+
+
+def get_unused_rooms(request):
+    # rooms = Room.objects.all()
+    # users = User.objects.all()
+    # user = User.objects.get(username='george')
+    # print(rooms)
+    # print(users)
+
+    # rooms_no_users = Room.objects.exclude(user__in=User.objects.all())
+    # rooms_no_questions = Room.objects.exclude(question__in=Question.objects.all())
+    # rooms_no_activity = Room.objects.exclude(question__in=Question.objects.all()).exclude(user__in=User.objects.all())
+    # print('rooms_no_users', rooms_no_users)
+    # print('rooms_no_questions', rooms_no_questions)
+    # print('rooms_no_activity', rooms_no_activity)
+    # print(roomss)
+
+    rooms_no_activity = Room.objects.exclude(question__in=Question.objects.all()).exclude(user__in=User.objects.all())
+
+    for room in rooms_no_activity:
+        room.delete()
