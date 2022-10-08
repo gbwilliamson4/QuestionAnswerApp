@@ -85,10 +85,9 @@ def answers(request):
 
 @login_required
 def save_answer(request, question_pk):
-    print("request.post", request.POST)
+    # Get the question, get the user's text, save as an Answer.
     question = Question.objects.get(pk=question_pk)
     person = request.user
-    print(person)
 
     ans = request.POST['answer']
     a = Answer(question=question, answer=ans, user=person)
@@ -102,30 +101,25 @@ def comparing(request):
     room_num = request.user.room_set.first()
     questions = Question.objects.filter(room=room_num)
 
-    # Lets loop through the questions, get the answers, pile them into a new list or something
+    # Lets loop through the questions, get the answers, pile them into a new dict
     info = {}
     for question in questions:
-        # print('question pk', question.pk)
         answer = Answer.objects.filter(question__in=Question.objects.filter(pk=question.pk))
         info[question] = answer
 
     context = {'info': info}
     return render(request, 'thegame/comparing.html', context)
-    # return render(request, 'thegame/comparing.html', context)
 
 
 @login_required
 def rooms(request):
     rooms = Room.objects.filter(user=request.user)
     room_hist = Room_History.objects.filter(user=request.user)
-    # print('rooms', rooms)
 
-    # room = rooms[0]
+    # if user is already in a room, find out who else is in that room.
     if rooms:
         room = rooms[0]
-        print('rooms is none.')
         users_in_room = room.user.all()
-        print('users_in_room:', users_in_room)
     else:
         users_in_room = ""
 
