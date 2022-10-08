@@ -10,7 +10,7 @@
 <body onload="addActiveCLass()">
 
 <div class="container p-3 my-5 border">
-    <h3>Room: {{ request.user.room_set.first }}</h3>
+    <h3><u>Room: {{ request.user.room_set.first }}</u></h3>
 </div>
 
 <div class="container p-3 my-5 border">
@@ -19,10 +19,12 @@
     <input type="text" name="question">
     <input type="submit" class="btn btn-outline-dark btn-sm" value="Submit">
 </form>
-</div>
+
 <br><br>
-<div class="container">
+
     {% if questions %}
+    <h3><u>Current Questions:</u></h3>
+    <br/>
         {% for question in questions %}
                 <p>{{ question }}</p>
         {% endfor %}
