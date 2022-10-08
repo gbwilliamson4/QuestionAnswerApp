@@ -1,8 +1,12 @@
 {% extends "thegame/base.html" %}
 {% block content %}
+<body onload="addActiveCLass()">
+<div class="container p-3 my-5 border">
+    <h3>Room: {{ request.user.room_set.first }}</h3>
+</div>
 
 {% if questions %}
-<div class="container-sm">
+<div class="container">
     <h2 class="ui header">{{ request.user }}'s Answers</h2>
 </div>
 <div class="container p-5 my-5">
@@ -41,5 +45,11 @@
             <h2 class="ui sub-header">There are no questions yet</h2>
         </div>
     {% endif %}
-
+</body>
+<script>
+function addActiveCLass() {
+    var element = document.getElementById("answers");
+    element.classList.add("active");
+}
+</script>
 {% endblock content %}

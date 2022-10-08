@@ -3,21 +3,24 @@
   <div class="container-fluid">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link active" href="{% url 'index' %}">Index</a>
+        <a id="index" class="nav-link" href="{% url 'index' %}">Index</a>
       </li>
       {% if request.user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'rooms' %}">Rooms</a>
+        <a id="rooms" class="nav-link" href="{% url 'rooms' %}">Rooms</a>
+      </li>
+      {% if request.user.room_set.first %}
+      <li class="nav-item">
+        <a id="new-question" class="nav-link" href="{% url 'new-question' %}">New Question</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'new-question' %}">New Question</a>
+        <a id="answers" class="nav-link" href="{% url 'answers' %}">Answers</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'answers' %}">Answers</a>
+        <a id="comparisons" class="nav-link" href="{% url 'comparing' %}">Comparisons</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'comparing' %}">Comparisons</a>
-      </li>
+      {% endif %}
+
     </ul>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
@@ -28,10 +31,10 @@
       </li>
       {% else %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+        <a id="login" class="nav-link" href="{% url 'login' %}">Log In</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+        <a id="signup" class="nav-link" href="{% url 'signup' %}">Sign Up</a>
       </li>
       {% endif %}
     </ul>

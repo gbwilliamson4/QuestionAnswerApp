@@ -2,7 +2,7 @@
 {% block content %}
 
 
-
+<body onload="addActiveCLass()">
 <div class="container p-5 my-5 text-center border">
     <form method="post">
       <div class="mb-3">
@@ -31,5 +31,11 @@
             {% endfor %}
         {% endfor %}
     {% endif %}
-
+</body>
+<script>
+function addActiveCLass() {
+    var element = document.getElementById("signup");
+    element.classList.add("active");
+}
+</script>
 {% endblock content %}

@@ -1,6 +1,6 @@
 {% extends "thegame/base.html" %}
 {% block content %}
-
+<body onload="addActiveCLass()">
 <div class="container p-5 my-5 text-center border">
     {% if rooms %}
     {% for room in rooms %}
@@ -51,5 +51,11 @@
         <p>No room history to show.</p>
     {% endif %}
 </div>
-
+</body>
+<script>
+function addActiveCLass() {
+    var element = document.getElementById("rooms");
+    element.classList.add("active");
+}
+</script>
 {% endblock content %}

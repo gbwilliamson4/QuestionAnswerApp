@@ -1,5 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from psycopg2 import IntegrityError
+from sqlite3 import IntegrityError
+
 from .forms import *
 from .models import *
 from django.urls import reverse
@@ -47,8 +50,7 @@ def new_question(request):
     """Add a new question."""
     # Get room num and questions in that room.
     room_num = request.user.room_set.first()
-    room_num_id = room_num.pk
-    questions = Question.objects.filter(room=room_num_id)
+    questions = Question.objects.filter(room=room_num)
     context = {'questions': questions}
     return render(request, 'thegame/new-question.html', context)
 
@@ -56,9 +58,13 @@ def new_question(request):
 @login_required
 def save_question(request):
     room_num = request.user.room_set.first()
-    question_txt = request.POST['question']
-    question = Question(room=room_num, question=question_txt)
-    question.save()
+    if room_num is None:
+        return redirect('new-question')
+    # Send Message saying you need to join a room first or something.
+    else:
+        question_txt = request.POST['question']
+        question = Question(room=room_num, question=question_txt)
+        question.save()
     return redirect('new-question')
 
 
@@ -142,14 +148,31 @@ def leave_room(request):
 def join_room(request):
     # get the desired room number from the form, get current user, add user to Room model via foreign key.
     num = request.POST['room-num']
-    num = int(num)  # make sure that its an integer.
-    user = request.user
-    room = Room.objects.filter(room_number=num)
-    room = room[0]
-    room.user.add(user)
-    room.save()
-    log_room_history(room, user)
-    return redirect('rooms')
+
+    # Run a query to see if this room num exists.
+    # temp = Room.objects.get(room_number=num)
+    try:
+        if Room.objects.filter(room_number=num).exists():
+            exists = True
+        else:
+            exists = False
+    except ValueError:
+        # This likely means they passed through an empty string.
+        exists = False
+
+    if not exists:
+        # They are trying to join a room that doesnt exist.
+        # Send Message that they need to create a room or something
+        return redirect('rooms')
+
+    else:
+        user = request.user
+        room = Room.objects.filter(room_number=num)
+        room = room[0]
+        room.user.add(user)
+        room.save()
+        log_room_history(room, user)
+        return redirect('rooms')
 
 
 def log_room_history(room, user):
@@ -167,10 +190,14 @@ def delete_unused_rooms():
     unused_rooms = Room.objects.all()
     print('unused rooms:', unused_rooms)
 
-
+# ***** Testing below this line *****
 import os
+
+
 @login_required
 def testing(request):
+    verified = verify_user_room(request)
+    print(verified)
     # delete_unused_rooms()
     # print('os.getcwd():', os.getcwd())
     cwd = os.getcwd()
@@ -186,3 +213,6 @@ def testing(request):
 
     context = {'info': info, 'cwd': cwd}
     return render(request, 'thegame/tests.html', context)
+
+
+    # Users shouldnt be able to be in more than one room at a time... but can they?

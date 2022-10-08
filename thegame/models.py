@@ -6,6 +6,11 @@ class Room(models.Model):
     room_number = models.IntegerField()
     user = models.ManyToManyField(User, default=None, blank=True, null=True)
 
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(fields=['room_number', 'user'], name='one room at a time per user')
+    #     ]
+
     def __str__(self):
         return str(self.room_number)
 

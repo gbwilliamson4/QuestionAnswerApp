@@ -5,9 +5,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>This is the new question page</title>
+    <title>Questions</title>
 </head>
-<body>
+<body onload="addActiveCLass()">
+
+<div class="container p-3 my-5 border">
+    <h3>Room: {{ request.user.room_set.first }}</h3>
+</div>
 
 <div class="container p-3 my-5 border">
 <form action="{% url 'save-question' %}" method="post">
@@ -30,5 +34,10 @@
 
 </body>
 </html>
-
+<script>
+function addActiveCLass() {
+    var element = document.getElementById("new-question");
+    element.classList.add("active");
+}
+</script>
 {% endblock content %}
