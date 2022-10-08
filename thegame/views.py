@@ -118,7 +118,18 @@ def comparing(request):
 def rooms(request):
     rooms = Room.objects.filter(user=request.user)
     room_hist = Room_History.objects.filter(user=request.user)
-    context = {'rooms': rooms, 'room_hist': room_hist}
+    # print('rooms', rooms)
+
+    # room = rooms[0]
+    if rooms:
+        room = rooms[0]
+        print('rooms is none.')
+        users_in_room = room.user.all()
+        print('users_in_room:', users_in_room)
+    else:
+        users_in_room = ""
+
+    context = {'rooms': rooms, 'room_hist': room_hist, 'users_in_room': users_in_room}
     return render(request, 'thegame/rooms.html', context)
 
 
@@ -190,14 +201,13 @@ def delete_unused_rooms():
     unused_rooms = Room.objects.all()
     print('unused rooms:', unused_rooms)
 
+
 # ***** Testing below this line *****
 import os
 
 
 @login_required
 def testing(request):
-    verified = verify_user_room(request)
-    print(verified)
     # delete_unused_rooms()
     # print('os.getcwd():', os.getcwd())
     cwd = os.getcwd()
@@ -213,6 +223,5 @@ def testing(request):
 
     context = {'info': info, 'cwd': cwd}
     return render(request, 'thegame/tests.html', context)
-
 
     # Users shouldnt be able to be in more than one room at a time... but can they?

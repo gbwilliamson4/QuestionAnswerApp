@@ -4,8 +4,8 @@
 <div class="container p-5 my-5 text-center border">
     {% if rooms %}
     {% for room in rooms %}
-        <p>There is a room. Hooray!</p>
-        <p>{{ room.room_number }}</p>
+        <p>You are currently in a room! Hooray!</p>
+    <p><strong>{{ room.room_number }}</strong></p>
     {% endfor %}
 
     <form method="post" action="{% url 'leave-room' %}">
@@ -27,6 +27,30 @@
             <button class="btn btn-outline-dark">Join Existing Room</button>
         </form>
 
+    {% endif %}
+</div>
+
+<div class="container p-5 my-5 text-center border">
+    {% if users_in_room %}
+        <h3>Room mates:</h3>
+        <table class="table table-striped" cellpadding="1500">
+                <thead>
+                <tr>
+                    <th scope="col">Username</th>
+                </tr>
+            </thead>
+            <tbody class="table">
+            {% for user in users_in_room %}
+                <tr>
+                    <td> {{user}} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+
+    {% else %}
+        <p>No one else currently in room</p>
     {% endif %}
 </div>
 
