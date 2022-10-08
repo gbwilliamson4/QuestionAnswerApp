@@ -130,7 +130,15 @@ def rooms(request):
 @login_required
 def new_room(request):
     # Get a 3 digit room number, create database instance, link room to user via foreign key in Room model.
-    room_num = randint(100, 999)
+    while True:
+        room_num = randint(100, 999)
+        # Check to see if that room already exists
+        room_check = Room.objects.filter(room_number=room_num)
+
+        if not room_check:
+            # Room does not exist. We can break.
+            break
+
     room = Room(room_number=room_num)
     room.save()
     room.user.add(request.user)
