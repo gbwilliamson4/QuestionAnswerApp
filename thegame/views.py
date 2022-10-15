@@ -6,7 +6,7 @@ from sqlite3 import IntegrityError
 from .forms import *
 from .models import *
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from random import randint  # Used for generating random 3 digit room numbers.
 from django.contrib import messages
@@ -53,6 +53,11 @@ def login_user(request):
         # return redirect('login')
         return render(request, 'thegame/login.html', {})
 
+
+def logout_user(request):
+    logout(request)
+    # messages.success(request, 'You have been successfully logged out. Please come again soon.')
+    return render(request, 'thegame/logout.html')
 
 @login_required
 def new_question(request):
