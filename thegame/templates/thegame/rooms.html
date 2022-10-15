@@ -8,6 +8,15 @@
 </head>
 
 <body onload="addActiveCLass()">
+<div class="container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-danger" role="alert">
+          {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
 <div class="container p-5 my-5 text-center border">
     {% if rooms %}
     {% for room in rooms %}
@@ -82,6 +91,30 @@
         <p>No room history to show.</p>
     {% endif %}
 </div>
+
+    <div class="container p-5 my-5 text-center">
+        <h4>Demo Rooms:</h4>
+        <table class="table table-striped" cellpadding="1500">
+                <thead>
+                <tr>
+                    <th scope="col">Room</th>
+                </tr>
+            </thead>
+            <tbody class="table">
+                <tr>
+                    <td> 916 </td>
+                </tr>
+                <tr>
+                    <td> 854 </td>
+                </tr>
+                <tr>
+                    <td> 502 </td>
+                </tr>
+            </tbody>
+        </table>
+
+</div>
+
 </body>
 <script>
 function addActiveCLass() {

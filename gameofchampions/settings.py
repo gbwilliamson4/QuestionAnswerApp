@@ -24,11 +24,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-o&cu#ch341o9ia0xti%(#bfwoy!0^hp0t^=i*rxbb#7(=cm515'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.getcwd() == '/app':
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-LOGIN_URL = '/thegame/login/'
+LOGIN_URL = '/login/'
 
 # Application definition
 

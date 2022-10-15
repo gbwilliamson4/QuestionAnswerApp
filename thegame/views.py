@@ -59,8 +59,11 @@ def new_question(request):
     """Add a new question."""
     # Get room num and questions in that room.
     room_num = request.user.room_set.first()
-    questions = Question.objects.filter(room=room_num)
-    context = {'questions': questions}
+    if room_num is None:
+        return redirect('rooms')
+    else:
+        questions = Question.objects.filter(room=room_num)
+        context = {'questions': questions}
     return render(request, 'thegame/new-question.html', context)
 
 
@@ -68,7 +71,7 @@ def new_question(request):
 def save_question(request):
     room_num = request.user.room_set.first()
     if room_num is None:
-        return redirect('new-question')
+        return redirect('rooms')
     # Send Message saying you need to join a room first or something.
     else:
         question_txt = request.POST['question']
@@ -82,13 +85,16 @@ def answers(request):
     room_num = request.user.room_set.first()
     questions = Question.objects.filter(room=room_num)
 
-    # Lets loop through the questions, get the answers, pile them into a new dict
-    info = {}
-    for question in questions:
-        answer = Answer.objects.filter(user=request.user).filter(question__in=Question.objects.filter(pk=question.pk))
-        info[question] = answer
+    if room_num is None:
+        return redirect('rooms')
+    else:
+        # Lets loop through the questions, get the answers, pile them into a new dict
+        info = {}
+        for question in questions:
+            answer = Answer.objects.filter(user=request.user).filter(question__in=Question.objects.filter(pk=question.pk))
+            info[question] = answer
 
-    context = {'answers': answers, 'questions': questions, 'info': info}
+        context = {'answers': answers, 'questions': questions, 'info': info}
     return render(request, 'thegame/answers.html', context)
 
 
@@ -110,13 +116,16 @@ def comparing(request):
     room_num = request.user.room_set.first()
     questions = Question.objects.filter(room=room_num)
 
-    # Lets loop through the questions, get the answers, pile them into a new dict
-    info = {}
-    for question in questions:
-        answer = Answer.objects.filter(question__in=Question.objects.filter(pk=question.pk))
-        info[question] = answer
+    if room_num is None:
+        return redirect('rooms')
+    else:
+        # Lets loop through the questions, get the answers, pile them into a new dict
+        info = {}
+        for question in questions:
+            answer = Answer.objects.filter(question__in=Question.objects.filter(pk=question.pk))
+            info[question] = answer
 
-    context = {'info': info}
+        context = {'info': info}
     return render(request, 'thegame/comparing.html', context)
 
 
@@ -184,7 +193,7 @@ def join_room(request):
 
     if not exists:
         # They are trying to join a room that doesnt exist.
-        # Send Message that they need to create a room or something
+        messages.error(request, 'That room does not appear to exist.')
         return redirect('rooms')
 
     else:
