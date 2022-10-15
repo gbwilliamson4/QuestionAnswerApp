@@ -7,7 +7,32 @@
     <title>Index</title>
 </head>
 <body onload="addActiveCLass()">
-<p>Hello and welcome to my game!</p>
+
+<div class="container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success" role="alert">
+        <p>{{ message }}</p>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<div class="container">
+    <h3 class="text-center">Hello and welcome to my game!</h3>
+    <h4>How to play:</h4>
+    <br/>
+    <li>Either log in or create an account</li>
+    <li>Once you are logged in, more tabs will show up on the ribbon above</li>
+    <li>Go to the "Rooms" page and either create a room, or join a room that you or a friend previously created.
+        Once you have joined a room, it will display your current room as well as any room-mates you have</li>
+    <li>Go to the "New Question". Here, you can review existing questions as well as add new ones.</li>
+    <li>The "Answers" tab is where you go to give your answer to all existing questions</li>
+    <li>Finally, everyone can go to the "Comparisons" tab to see everyone's answers.</li>
+    <br/><br/>
+    <p>This game was a lot of fun to make. Feel free to give me any suggestions!</p>
+
+</div>
 </body>
 </html>
 <script>

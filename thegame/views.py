@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from random import randint  # Used for generating random 3 digit room numbers.
+from django.contrib import messages
 
 
 def index(request):
@@ -24,12 +25,14 @@ def signup(request):
             user = form.save()
 
             login(request, user)
-
+            messages.success(request, "Login Successful.")
             return redirect('index')
+
     else:
         form = SignUpForm()
 
-    return render(request, 'thegame/signup.html', {'form': form})
+    context = {'form': form}
+    return render(request, 'thegame/signup.html', context)
 
 
 def login_user(request):
@@ -40,8 +43,14 @@ def login_user(request):
         if user is not None:
             login(request, user)
             # Redirect to a success page.
+            messages.success(request, "Login Successful.")
             return redirect('index')
+        else:
+            messages.error(request, 'Invalid username/password combination.')
+            return redirect('login')
     else:
+        # messages.error(request, 'Problem! Sooo many problems!')
+        # return redirect('login')
         return render(request, 'thegame/login.html', {})
 
 
@@ -208,12 +217,12 @@ def delete_unused_rooms(request):
 
     return redirect('index')
 
-# ***** Testing below this line *****
 
+# ***** Testing below this line *****
 
 @login_required
 def testing(request):
-    get_unused_rooms(request)
+    # get_unused_rooms(request)
 
     room_num = request.user.room_set.first()
     questions = Question.objects.filter(room=room_num)

@@ -22,6 +22,17 @@
         {% csrf_token %}
     </form>
 </div>
+
+<div class="container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-danger" role="alert">
+          {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
+
 </body>
 <script>
 function addActiveCLass() {
