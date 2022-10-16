@@ -16,8 +16,8 @@
 <div class="container p-3 my-5 border">
 <form action="{% url 'save-question' %}" method="post">
     {% csrf_token %}
-    <input type="text" name="question">
-    <input type="submit" class="btn btn-outline-dark btn-sm" value="Submit">
+    <input type="text" name="question" class="form-control">
+    <input type="submit" class="btn btn-outline-dark  margin-bottom" value="Submit">
 </form>
 
 <br><br>
